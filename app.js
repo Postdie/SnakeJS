@@ -1,61 +1,62 @@
 const lienzo = document.querySelector('#lienzo');
 const ctx = lienzo.getContext('2d');
 
-let posX = 0;
+
+let posX = 2;
 let posY = 1;
 let direction = 1;
 
 const bgSound = new Audio('./8-bit-game-158815.mp3');
 const eating = new Audio('./coin-collect-retro-8-bit-sound-effect-145251.mp3');
+const death = new Audio('./retro-game-sfx-explosion-104422.mp3');
 
 function init(){
+    posX = 2;
+    posY = 1;
+    direction = 1;
 
-posX = 0;
-posY = 1;
-direction = 1;
+    bgSound.play();
 
-const snake = []
-ctx.fillStyle = "black";
-ctx.fillRect(50, 30, 20, 20);
-
-ctx.font = "25px Serif";
-ctx.fillText("✨", 100, 100);
-
-const head = {
-    x: 2,
-    y: 1,
-    pinta: function(){
-        ctx.font = "25px Serif";
-        ctx.fillText("🎧", this.x * 20, this.y * 20);
+    const snake = []
+    ctx.fillStyle = "black";
+    ctx.fillRect(50, 30, 20, 20);
+    
+    ctx.font = "25px Serif";
+    ctx.fillText("✨", 100, 100);
+    
+    const head = {
+        x: 2,
+        y: 1,
+        pinta: function(){
+            ctx.font = "25px Serif";
+            ctx.fillText("🎧", this.x * 20, this.y * 20);
+        }
     }
+    
+    snake.push(head);
+    snake.push({
+        x: 1,
+        y: 1,
+        xNext: 2,
+        yNext: 1,
+        pinta: function(){
+            ctx.font = "25px Serif";
+            ctx.fillText("🎵", this.x * 20, this.y * 20);
+        }
+    });
+    
+    snake.push({
+        x: 0,
+        y: 1,
+        xNext: 1,
+        yNext: 1,
+        pinta: function(){
+            ctx.font = "25px Serif";
+            ctx.fillText("🎵", this.x * 20, this.y * 20);
+        }
+    });
+return snake;    
 }
-
-snake.push(head);
-snake.push({
-    x: 1,
-    y: 1,
-    xNext: 2,
-    yNext: 1,
-    pinta: function(){
-        ctx.font = "25px Serif";
-        ctx.fillText("🎵", this.x * 20, this.y * 20);
-    }
-});
-
-snake.push({
-    x: 0,
-    y: 1,
-    xNext: 1,
-    yNext: 1,
-    pinta: function(){
-        ctx.font = "25px Serif";
-        ctx.fillText("🎵", this.x * 20, this.y * 20);
-    }
-});
-
-return snake;
-}
-
 let snake = init();
 
 function nextMove(){
@@ -92,9 +93,10 @@ function checkEat(){
     }
 }
 
+
 function gameOver(){
-    for(let i = 1; i < snake.length; i++){
-        if(snake[0].x === snake[i].x && snake[0].y === snake[i].y){
+    for (let i=1; i<snake.length;i++){
+        if(snake[0].x === snake [i].x && snake[0].y === snake [i].y){
             return true;
         }
     }
@@ -106,16 +108,18 @@ function gameOver(){
 food.random();
 setInterval(() => {
     ctx.fillRect(0, 0, 500, 340);
+
     
     food.pinta();
     snake.forEach(item => item.pinta());
 
     checkEat();
-    
-    //if(gameOver()){
-    //    alert('Perdiste!');
-    //    snake = init();
-    //}
+
+    if(gameOver()){
+        death.play();
+        alert('perdiste');
+        snake = init();
+    }
 
     if(direction === 1) posX++;
     else if(direction === 2) posY++;
@@ -147,24 +151,26 @@ document.querySelector('body')
                 direction = 4;
                 break;
         }
-    });
-document.querySelector('.container')
-.addEventListener('click', (e) => {
-    if(e.target.classList.contains('btn')){
-        const button = e.target.innerText;
-        switch(button){
-            case 'Right':
-                direction = 1;
-                break;
-            case 'Down':
-                direction = 2;
-                break;
-            case 'Left':
-                direction = 3;
-                break;
-            case 'Up':
-                direction= 4;
-                break;
-        }
-    }
-});
+    })
+
+    document.querySelector('.container')
+        .addEventListener('click',(e) => {
+            if(e.target.classList.contains('btn')){
+                const button= e.target.innerText;
+                switch(button){
+                    case 'Right':
+                        direction=1;
+                        break;
+                    case 'Down':
+                        direction=2;
+                        break;
+                    case 'Left':
+                        direction=3;
+                        break;
+                    case 'Up':
+                        direction=4;
+                        break;
+                }
+            }
+          
+        })
