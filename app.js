@@ -22,7 +22,7 @@ function init(){
     ctx.fillRect(50, 30, 20, 20);
     
     ctx.font = "25px Serif";
-    ctx.fillText("✨", 100, 100);
+    ctx.fillText("🎧", 100, 100);
     
     const head = {
         x: 2,
